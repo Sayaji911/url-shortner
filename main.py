@@ -1,29 +1,42 @@
-from fastapi import FastAPI, Request, Depends
-from src.shortit import src as shortensrc
-from mongoengine import connect, disconnect, errors
+from fastapi import FastAPI,Request
+from router.shortit import router as ShortenRouter
+from router.redirect import router as RedirectRouter
+from mongoengine import connect
+from fastapi.responses import  HTMLResponse
+from fastapi.templating import Jinja2Templates
 from decouple import config
 
 
+MODEL_URL = config('MODEL_URL')
+
+print(MODEL_URL)
+
 app = FastAPI()
 
-MODEL_URL = config("MODEL_URL")
+# Templates
+templates = Jinja2Templates(directory="template")
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    app.include_router(shortensrc)
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+app.include_router(ShortenRouter, tags=["Shorten long URL"], prefix="/api/v1/shortit")
+
+app.include_router(RedirectRouter, tags=["Redirect to Short URL"])
 
 
 @app.on_event("startup")
 async def create_db_client():
     try:
-        connect(host = MODEL_URL )
-        print("Connected")
-
+        connect(host=MODEL_URL)
+        print("Successfully connected to Mongo Atlas database.")
     except Exception as e:
         print(e)
-        print("An error occured")
+        print("An error occurred while connecting to Mongo Atlas database.")
+
 
 @app.on_event("shutdown")
-async  def shutdown_db_client():
+async def shutdown_db_client():
     pass
