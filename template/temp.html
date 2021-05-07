@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Codes</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="main.css">
+    <style>
+        img{
+            width: 100%;
+        }
+        div img{
+            width: 50%;
+        }
+    </style>
+    <script src="qrcode.js"></script>
+</head>
+<body>
+    <header>
+        <h1>QR Codes</h1>
+    </header>
+    <main>
+       <!-- using
+       https://davidshimjs.github.io/qrcodejs/
+       -->
+        <div id="output"></div>
+        <img src="qrcode-encoding.png" />
+    </main>
+    <script>
+        const qrcode = new QRCode(document.getElementById('qrcode'), {
+            text: 'http://jindo.dev.naver.com/collie',
+  width: 128,
+  height: 128,
+  colorDark : '#000000',
+  colorLight : '#ffff00',
+  correctLevel : QRCode.CorrectLevel.H
+});
+
+            k = "www.google.com"
+    </script>
+</body>
+</html>

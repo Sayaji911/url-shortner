@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI and MongoDB URL Shortener</title>
+    <style>
+        body{
+            background-image: url("https://i.ibb.co/wdD12jG/purple-blue-gradient-linear-1920x1080-c2-9400d3-00bfff-a-150-f-14.jpg");
+        }
+
+        {
+            box-sizing: border-box;
+            padding: 0;margin: 0;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+
+        .main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            font-family: Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;
+
+
+        }
+        @media (max-width : 1024px){
+            .app__container{
+                width: 95%;
+                collapse: #fffefa;
+            }
+        }
+        h1{
+            font-size: 45px;
+            color: #fffefa;
+        }
+        form{
+            margin: 1rem auto;
+        }
+        input{
+            width: 100%;
+            margin: .5rem 0;
+            border: 1px solid #124f02;
+            padding: 1rem;
+            outline: none;
+            border-radius: 10px;
+        }
+        button{
+            color: #fffefa;
+            background:cornflowerblue;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            border: 2px #9d13ff;
+            box-shadow:#9d13ff;
+            cursor: pointer;
+            opacity: 1.0;
+            transition: .3s ease-in-out all;
+
+
+        }
+        button:hover{
+            opacity: 1;
+            transform: translateY(5px);
+        }
+        .result__container{
+            display: none;
+            justify-content: space-evenly;
+            align-items: center;
+            margin: 1rem auto;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        @media(max-width : 768px){
+            .result__container{
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <section class = "main">
+        <div class = "app__container">
+            <h1 class = "app__header">FastAPI and MongoDB URL Shortener</h1>
+            <p style= color:white >Shorten your links, boost your brand.</p>
+            <form id = "form">
+                <label for="longUrl"></label><input type = "text" placeholder=" 🔗 Paste Long URL" name="longUrl" id = "longUrl" required/>
+                <label for="customCode"></label><input type = "text" placeholder="Enter Custom code, max 8 characters (OPTIONAL)" name="customCode" id="customCode" maxlength="8"/>
+                <button type="submit">Shorten</button>
+            </form>
+
+            <div>
+
+                <p style="color: #fffefa" >Built with ❤️ by Sayaji Chavan</p>
+            </div>
+
+            <div class = "result__container">
+                <div class = "shorturl">
+
+                </div>
+                <div style="margin-left: 15px" id="qrcode"></div>
+
+                <div>
+                    <button onclick = "copyLink()">Copy Link</button>
+                    <button onclick = "downloadQR()">Download QR</button>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script>
+        const form = document.getElementById("form");
+        const resultContainer = document.querySelector(".result__container");
+        const shortUrl = document.querySelector(".shorturl");
+        const qrcodecontainer =document.getElementById('qrcode');
+
+        const downloadQR = () => {
+            const a = document.createElement('a');
+            a.download = 'QR-Code.png';
+            a.href = qrcodecontainer.querySelector('img').src;
+            console.log(a.href);
+            a.click();
+            a.remove();
+
+        }
+
+        const copyLink = () => {
+            const textField = document.createElement('textarea');
+            textField.innerText = document.querySelector('.result__container a').innerText;
+            document.body.appendChild(textField);
+            textField.select();
+            document.execCommand('copy');
+            textField.remove();
+            alert("Link successfully copied to your clipboard !")
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            var formData = new FormData();
+            formData.append("longUrl", e.target.longUrl.value);
+            formData.append("customCode", e.target.customCode.value);
+            let data = {}
+            for(let pair of formData.entries()){
+                data[pair[0]] = pair[1]
+            }
+
+            console.log(data)
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/v1/shortit", true);
+            // Set the request header
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    console.log("Done")
+                }
+            }
+
+            xhr.onload = function () {
+                const response = JSON.parse(this.responseText);
+                console.log(this.status);
+                console.log(response);
+                var codeUrl;
+                if (this.status == 200) {
+                    resultContainer.style.display = "flex";
+                    shortUrl.innerHTML = `SHORT URL:- <a href=${response.shortUrl}>${response.shortUrl }</a>`;
+                    qrcodecontainer.innerHTML = '';
+                           const qrcode = new QRCode(qrcodecontainer, {
+                                text: response.shortUrl,
+                                width: 128,
+                                height: 128,
+                                colorDark : '#000',
+                                colorLight : '#fff',
+                                correctLevel : QRCode.CorrectLevel.H
+                           });
+                } else {
+                    alert(`An error occurred, ${response.detail}`)
+                }
+            };
+
+            xhr.send(JSON.stringify(data));
+
+        })
+
+
+    </script>
+</body>
+</html>
