@@ -9,3 +9,4 @@ python-decouple
 starlette
 uvicorn
 validator
+gunicorn
