@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'linkyfy'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_d882dd9958bb47cc859d8fa4990a220c }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_40d652d0a6fc4193b05e6f93daad7195 }}
