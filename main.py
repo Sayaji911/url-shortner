@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from decouple import config
 
 BASE_URL = "http://localhost:8000"
-MODEL_URL = ""
+MODEL_URL = "mongodb+srv://dbSayaji:qwerty121@cluster0.wdeny.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
 #MODEL_URL = config('MODEL_URL')
 
