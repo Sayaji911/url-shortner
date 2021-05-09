@@ -36,6 +36,9 @@ gunicorn -w 1 -k uvicorn.workers.UvicornH11Worker main:app
 * and lots of Javascript HTML and CSS for UI 
 
 ## Screenshots
+![image](https://user-images.githubusercontent.com/22417162/117569562-e4f10e80-b0e3-11eb-89db-584bcde60798.png)
+![image](https://user-images.githubusercontent.com/22417162/117569630-313c4e80-b0e4-11eb-92ae-ae3bf515cca3.png)
+
 
 
 ## License
