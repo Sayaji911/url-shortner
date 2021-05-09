@@ -32,13 +32,10 @@ gunicorn -w 1 -k uvicorn.workers.UvicornH11Worker main:app
 * [FastAPI](https://fastapi.tiangolo.com/) - Python web framework used to  build server
 * [MongoDB ](https://www.mongodb.com/) - NoSQL Database
 * [Heroku](https://heroku.com/) - Cloud
-* [Nanoid] (https://www.npmjs.com/package/nanoid) - Nanoid for generating codes for shorturls
+* [Nanoid](https://www.npmjs.com/package/nanoid/) - Nanoid for generating codes for shorturls
 * and lots of Javascript HTML and CSS for UI 
 
 ## Screenshots
-![image](https://user-images.githubusercontent.com/22417162/116059704-bcf2bb80-a69e-11eb-81ad-e558df6df68a.png)
-
-
 
 
 ## License
