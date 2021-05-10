@@ -13,7 +13,8 @@ async def test(url: UrlSchema):
     url = dict(url)
 
     if url["customCode"]:
-        shortCode = url["customCode"].replace(" ","")
+        shortCode = url["customCode"]
+        shortCode = shortCode.replace(' ','')
     else:
         shortCode = nanoid.generate(size=8)
 
